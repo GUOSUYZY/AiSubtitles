@@ -1,35 +1,45 @@
 @echo off
 chcp 65001 >nul
-title 本地Whisper语音识别工具
+title Local Whisper Speech Recognition Tool
 
-echo 🤖 本地Whisper语音识别工具
-echo ================================
+echo ============================================
+echo Local Whisper Speech Recognition Tool
+echo ============================================
 
-:: 检查Python环境
-if exist "venv\subtitle_tools-cpu\Scripts\python.exe" (
-    echo ✅ 找到虚拟环境，使用虚拟环境Python...
-    set PYTHON_EXE=venv\subtitle_tools-cpu\Scripts\python.exe
+:: Check Python environment
+if exist "py\python.exe" (
+    echo [OK] Found built-in Python environment
+    set PYTHON_EXE=py\python.exe
 ) else (
-    echo ⚠️ 未找到虚拟环境，使用系统Python
-    set PYTHON_EXE=python
-)
-
-:: 检查主程序文件
-if not exist "local_whisper_app.py" (
-    echo ❌ 错误：找不到主程序文件 local_whisper_app.py
+    echo [ERROR] Built-in Python environment not found
+    echo Please ensure py\python.exe exists
     pause
     exit /b 1
 )
 
-echo 🚀 启动语音识别工具...
+:: Check main program file
+if not exist "whisper_app.py" (
+    echo [ERROR] Main program file whisper_app.py not found
+    pause
+    exit /b 1
+)
+
+:: Check models directory
+if not exist "models" (
+    echo [WARNING] Models directory not found
+    echo Please ensure model files are downloaded to models directory
+)
+
+echo [INFO] Starting offline speech recognition tool...
+echo [INFO] This version runs completely offline, no network required
 echo.
 
-:: 启动主程序
-%PYTHON_EXE% local_whisper_app.py
+:: Start main program
+"%PYTHON_EXE%" whisper_app.py
 
-:: 如果程序异常退出，暂停显示错误信息
+:: If program exits abnormally, pause to show error
 if errorlevel 1 (
     echo.
-    echo ❌ 程序异常退出，错误代码：%errorlevel%
+    echo [ERROR] Program exited abnormally, error code: %errorlevel%
     pause
 ) 
